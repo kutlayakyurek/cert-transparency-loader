@@ -1,0 +1,28 @@
+{
+  "logs": [
+    {
+      "description": "Google 'Aviator' log",
+      "url": "http://ct.googleapis.com/aviator/ct/v1/",
+      "operated_by": [
+        0
+      ]
+    },
+    {
+      "description": "Comodo 'Sabre' CT log",
+      "url": "https://sabre.ct.comodo.com/ct/v1/",
+      "operated_by": [
+        8
+      ]
+    }
+  ],
+  "operators": [
+    {
+      "name": "Google",
+      "id": 0
+    },
+    {
+      "name": "Comodo CA Limited",
+      "id": 8
+    }
+  ]
+}
