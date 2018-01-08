@@ -1,4 +1,4 @@
-#Certificate Transparency Loader Standalone Application Project
+# Certificate Transparency Loader Standalone Application Project
 
 Certificate downloader uses Certificate Transparency Logs on web provided by operators.
 
