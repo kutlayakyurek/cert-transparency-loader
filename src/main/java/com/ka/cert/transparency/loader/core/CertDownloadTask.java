@@ -48,19 +48,20 @@ public class CertDownloadTask extends RecursiveTask<Long> {
             HttpLogClient client = new HttpLogClient(url);
             logger.info("Downloading logs from " + offset + " to " + size);
             List<ParsedLogEntry> list = client.getLogEntries(offset, size);
-            list.forEach(l -> {
-                try {
-                    TimestampedEntry te = l.getMerkleTreeLeaf().timestampedEntry;
-                    CertificateUtils.saveCertificateFileFromBytes(te.signedEntry.x509, te.timestamp, directory);
-                } catch (CertificateException e) {
-                    logger.error("Error thrown while trying to save certificate file.\n" + e.getMessage());
-                }
-            });
+            if (saveCert) {
+                list.forEach(l -> {
+                    try {
+                        TimestampedEntry te = l.getMerkleTreeLeaf().timestampedEntry;
+                        CertificateUtils.saveCertificateFileFromBytes(te.signedEntry.x509, te.timestamp, directory);
+                    } catch (CertificateException e) {
+                        logger.error("Error thrown while trying to save certificate file.\n" + e.getMessage());
+                    }
+                });
+            }
             return (long) list.size();
         } else {
-            long mid = offset + (size - offset) / 2;
-            CertDownloadTask left = new CertDownloadTask(offset, mid, url, directory, saveCert);
-            CertDownloadTask right = new CertDownloadTask(mid + 1, size, url, directory, saveCert);
+            CertDownloadTask left = new CertDownloadTask(offset, offset + processLimit, url, directory, saveCert);
+            CertDownloadTask right = new CertDownloadTask(offset + processLimit + 1, size, url, directory, saveCert);
             left.fork();
             long rightProcessCount = right.compute();
             long leftProcessCount = left.join();

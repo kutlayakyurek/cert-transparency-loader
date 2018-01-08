@@ -1,12 +1,15 @@
 package com.ka.cert.transparency.service.test.integration;
 
 import com.ka.cert.transparency.loader.core.CertDownloadTask;
+import com.ka.cert.transparency.loader.util.CertificateUtils;
+import com.ka.cert.transparency.loader.util.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.concurrent.ForkJoinPool;
 
 /**
@@ -25,12 +28,26 @@ public class CertClientTest {
 
     @Test
     public void downloadCertTest() {
-        int fetchSize = 5000;
+        int fetchSize = 50000;
         int nThreads = Runtime.getRuntime().availableProcessors();
         ForkJoinPool pool = new ForkJoinPool(nThreads);
         Long processedLogCount = pool.invoke(new CertDownloadTask(0, fetchSize, logUrl, logDirectory, false));
         logger.info("Processed Log Count: " + processedLogCount);
         Assert.assertEquals(new Long(fetchSize + 1), processedLogCount);
+    }
+
+    @Test
+    public void saveCert() throws IOException {
+        FileUtils.createDirectoryIfNotExists(logDirectory);
+        FileUtils.createDirectoryIfNotExists(logDirectory.concat(CertificateUtils.FOLDER_VALID));
+        FileUtils.createDirectoryIfNotExists(logDirectory.concat(CertificateUtils.FOLDER_INVALID));
+        int fetchSize = 50;
+        int nThreads = Runtime.getRuntime().availableProcessors();
+        ForkJoinPool pool = new ForkJoinPool(nThreads);
+        Long processedLogCount = pool.invoke(new CertDownloadTask(0, fetchSize, logUrl, logDirectory, true));
+        logger.info("Processed Log Count: " + processedLogCount);
+        Assert.assertEquals(new Long(fetchSize + 1), processedLogCount);
+        //FileUtils.deleteDirectoryRecursively(logDirectory);
     }
 
 }

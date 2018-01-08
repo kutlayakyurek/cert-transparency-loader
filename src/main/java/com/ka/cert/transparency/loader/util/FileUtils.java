@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * Description: File utility class
@@ -32,6 +34,44 @@ public class FileUtils {
                 logger.error("Could not create directory with path: " + directoryPath);
             }
         }
+    }
+
+    /**
+     * Deletes directory if it exists into specified path
+     *
+     * @param directoryPath Target directory path
+     */
+    public static void deleteDirectoryIfExists(String directoryPath) {
+        File directory = new File(directoryPath);
+        if (directory.exists()) {
+            boolean deleted = directory.delete();
+            if (!deleted) {
+                logger.error("Could not delete directory with path: " + directoryPath);
+            }
+        }
+    }
+
+    /**
+     * Deletes directory with all content in it
+     *
+     * @param directoryPath Target directory patbh
+     * @throws IOException Thrown while deleting files recursively if something occurs outside of scope
+     */
+    public static void deleteDirectoryRecursively(String directoryPath) throws IOException {
+        Path directory = Paths.get(directoryPath);
+        Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
     }
 
     /**
