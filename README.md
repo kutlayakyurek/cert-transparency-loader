@@ -1,21 +1,4 @@
-# Certificate Transparency Loader Standalone Application Project
-
-Certificate downloader uses Certificate Transparency Logs on web provided by operators.
-
-## Introduction
-
-This project aims to download and extract X509 certificate files from certificate transparency logs.
-
-## Purpose
-
-Main purpose is monitoring and downloading all certificates from certificate transparency logs.
-
-## Deployment
-
-This is a simple standalone Spring Boot project, deployment can be on any server. Docker file will be added later 
-on for Docker integration.
-
-## How To Contribute# Certificate Transparency Loader Standalone Application Project
+#Certificate Transparency Loader Standalone Application Project
 
 Certificate downloader uses Certificate Transparency Logs on web provided by operators.
 
